@@ -3,4 +3,4 @@
 .idea
 
 # 클라이언트 정보 유출 방지
-application-oauth.properties
+src/main/resources/application-oauth.properties
