@@ -32,4 +32,47 @@
 ## Mustache
 css를 header에, js는 footer에 두는 이유는 **페이지 로딩 속도를 높이기 위해서**이다. html은 위에서부터 코드가 실행되기 때문에 head가 다 실행되고나서 body가 실행된다.  
 특히 js의 용량이 크면 클수록 body 부분의 실행이 늦어지기 때문에 js는 body 하단에 두어 화면이 다 그려진 뒤에 호출하는 것이 좋다.
-* `{{>layout/header}}` : 현재 머스테치 파일을 기준으로 다른 파일을 가져옴
+1. `{{>layout/header}}`
+    * 현재 머스테치 파일을 기준으로 다른 파일을 가져옴
+2. `{{#userName}}`
+    * 머스테치는 다른 언어와 같은 if문을 제공하지 않음
+    * true/false 여부만 판단
+    * 그래서 머스테치에서는 항상 최종값을 넘겨줘야 함
+    * userName이 있다면 userName을 노출시키도록 구성
+3. `{{^userName}}`
+    * 머스테치에서 해당 값이 존재하지 않는 경우에 ^를 사용
+    * userName이 없다면 로그인 버튼을 노출시키도록 구성
+
+## Spring Security
+1. `@EnableWebSecurity`
+    * Spring Security 설정들을 홀성화
+2. `.csrf().disable().headers().frameOptions().disable()`
+    * h2-console 화면을 사용하기 위해 해당 옵션들을 disable
+3. `authorizeRequests`
+    * URL별 권한 관리를 설정하는 옵션의 시작점
+    * authorizeRequests가 선언되어야만 antMatchers 옵션 사용 가능
+4. `antMatchers`
+    * 권한 관리 대상을 지정하는 옵션
+    * URL, HTTP 메소드 별로 관리 가능
+    * "/" 등 지정된 URL들은 permitAll() 옵션을 통해 전체 열람 권한을 주었음
+    * "/api/v1/**" 주소를 가진 API는 USER 권한을 가진 사람만 가능하도록 했음
+5. `anyRequest`
+    * 설정된 값들 이외 나머지 URL들을 나타냄
+    * 여기서는 authenticated()을 추가하여 나머지 URL들은 모두 인증된 사용자들에게만 허용
+    * 인증된 사용자 즉, 로그인한 사용자들을 말함
+6. `logout().logoutSuccessUrl("/")`
+    * 로그아웃 기능에 대한 여러 설정의 진입점
+    * 로그아웃 성공시 "/" 주소로 이동
+7. `oauth2Login`
+    * OAuth 2 로그인 기능에 대한 여러 설정의 진입점
+8. `userInfoEndpoint`
+    * OAuth 2 로그인 성공 이후 사용자 정보를 가져올 때의 설정들을 담당
+9. `userService`
+    * 소셜 로그인 성공 시 후속 조치를 짆ㅇ할 UserService 인터페이스의 구현체를 등록함
+    * 리소스 서버(즉, 소셜 서비스들)에서 사용자 정보를 가져온 상태에서 추가로 진행하고자 하는 기능을 명시
+10. `a href="/logout"`
+    * 스프링 시큐리티에서 기본적으로 제공하는 로그아웃 URL
+    * 컨트롤러를 만들 필요가 없음
+11. `a href="/oauth2/authorization/google`
+    * 스프링 시큐리티에서 기본적으로 제공하는 로그인 URL
+    * 로그아웃 URL과 마찬가지로 컨트롤러를 만들 필요가 없음
