@@ -44,6 +44,7 @@ css를 header에, js는 footer에 두는 이유는 **페이지 로딩 속도를 
     * userName이 없다면 로그인 버튼을 노출시키도록 구성
 
 ## Spring Security
+### method
 1. `@EnableWebSecurity`
     * Spring Security 설정들을 홀성화
 2. `.csrf().disable().headers().frameOptions().disable()`
